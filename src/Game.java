@@ -2,14 +2,18 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
-    public static int SIZE = 3;
-    public static int DOTS_TO_WIN = 3;
+    public static int SIZE = 5;
+    public static int DOTS_TO_WIN = 4;
     public static final char DOT_EMPTY = '•';
     public static final char DOT_X = 'X';
     public static final char DOT_O = 'O';
     public static char[][] map;
     public static Scanner sc = new Scanner(System.in);
     public static Random rand = new Random();
+    public static int gorLine;
+    public static int verLine;
+    public static int diagonalA;
+    public static int diagonalB;
 
     public static void main(String[] args) {
         initMap();
@@ -38,16 +42,56 @@ public class Game {
         }
         System.out.println("Игра закончена");
     }
+
     public static boolean checkWin(char symb) {
-        if(map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return true;
-        if(map[1][0] == symb && map[1][1] == symb && map[1][2] == symb) return true;
-        if (map[2][0] == symb && map[2][1] == symb && map[2][2] == symb) return true;
-        if (map[0][0] == symb && map[1][0] == symb && map[2][0] == symb) return true;
-        if (map[0][1] == symb && map[1][1] == symb && map[2][1] == symb) return true;
-        if (map[0][2] == symb && map[1][2] == symb && map[2][2] == symb) return true;
-        if (map[0][0] == symb && map[1][1] == symb && map[2][2] == symb) return true;
-        if (map[2][0] == symb && map[1][1] == symb && map[0][2] == symb) return true;
-        return false;
+        return checkGorLine(symb) || checkVerLine(symb) || checkDiagonalLine(symb);
+    }
+
+    public static boolean checkGorLine(char symb){
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if(map[i][j] == symb) {
+                    gorLine++;
+                    if(gorLine == DOTS_TO_WIN) return true;
+                }else{
+                    gorLine = 0;
+                }
+            }
+        }
+        return  false;
+    }
+
+    public static boolean checkVerLine(char symb){
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if(map[j][i] == symb) {
+                    verLine++;
+                    if(verLine == DOTS_TO_WIN) return true;
+                }else{
+                    verLine = 0;
+                }
+            }
+        }
+        return  false;
+    }
+
+    public static boolean checkDiagonalLine(char symb){
+        diagonalA = diagonalB = 0;
+        for (int i = 0; i < SIZE; i++) {
+            if(map[i][i] == symb){
+                diagonalA++;
+                if(diagonalA == DOTS_TO_WIN) return true;
+            }else{
+                diagonalA = 0;
+            }
+            if(map[i][SIZE - i -1] == symb){
+                diagonalB++;
+                if(diagonalB == DOTS_TO_WIN) return true;
+            }else{
+                diagonalB = 0;
+            }
+        }
+        return  false;
     }
     public static boolean isMapFull() {
         for (int i = 0; i < SIZE; i++) {
